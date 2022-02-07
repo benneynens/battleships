@@ -2,15 +2,25 @@ const gameBoard = require("../buildGrid");
 const newShip = require("../newShip");
 
 const gameboard = gameBoard(10, 10);
-const grid = gameboard.getGridArray();
+const grid = gameboard.getGrid();
 
-test.skip("ship outside grid disallowed", () => {
+
+test.skip('console log', () => {
+  gameboard.addShip({ x: 4, y: 5 }, "horizontal", 4);
+
+  console.log (getSquare(gameboard.getGrid(), 7,5).gridSquare.occupiedStatus() )
+
+});
+
+
+
+test("ship outside grid disallowed", () => {
   let startPoint = { x: 9, y: 0 };
 
   expect(newShip(startPoint, "horizontal", 4, grid)).toBeFalsy();
 });
 
-test.skip("ship outside grid disallowed", () => {
+test("ship inside grid is allowed", () => {
   let startPoint = { x: 4, y: 0 };
 
   expect(newShip(startPoint, "horizontal", 4, grid)).toBeTruthy();
@@ -22,8 +32,8 @@ test.skip("occupied grid cells contain a ship object", () => {
   expect(gameboard.getGridArray()[5][4].occupiedStatus()).toBeTruthy();
 });
 
-test("unoccupied cells return false when no ship", () => {
-  gameboard.addShip( { x: 4, y: 5 }, "horizontal", 4 );
+test.skip("unoccupied cells return false when no ship", () => {
+  // gameboard.addShip( { x: 4, y: 5 }, "horizontal", 4 );
 
     // console.log (gameboard.getGridArray())
 

@@ -1,54 +1,47 @@
-const { moduleExpression } = require("@babel/types");
+// const getRandomGridSquare = (grid) => {
+//   const x = Math.floor(Math.random() * 10 + 1);
+//   const y = Math.floor(Math.random() * 10 + 1);
 
-
-const getRandomGridSquare = (grid) => {
-    const x = Math.floor((Math.random() * 10) + 1);
-    const y = Math.floor((Math.random() * 10) + 1);
-
-    return {x, y}
-}
+//   return { x, y };
+// };
 
 const getNewShipGridLocations = (startPoint, axis, length) => {
-    let shipLocations = [];
-  
-    const fixedAxis = axis === "horizontal" ? "y" : "x";
-    const variableAxis = fixedAxis === "x" ? "y" : "x";
-  
-    for (
-      let i = startPoint[variableAxis];
-      i < startPoint[variableAxis] + length;
-      i++
-    ) {
-      shipLocations.push({
-        [fixedAxis]: startPoint[fixedAxis],
-        [variableAxis]: i,
-      });
-    }
+  let shipLocations = [];
 
-    return shipLocations;
-  };
+  const fixedAxis = axis === "horizontal" ? "y" : "x";
+  const variableAxis = fixedAxis === "x" ? "y" : "x";
 
-function shipWithinGrid(shipPosition, grid) {
-    console.log (shipPosition)
-    console.log (grid)
+  for (let i = startPoint[variableAxis]; i < startPoint[variableAxis] + length; i++) {
+    shipLocations.push({
+      [fixedAxis]: startPoint[fixedAxis],
+      [variableAxis]: i,
+    });
+  }
 
-    return shipPosition.every( (object) => object.y <= grid.length - 1 && object.x <= grid[0].length -1 )
+  return shipLocations;
+};
 
-    // shipPosition.forEach(object => {
-    //     if (object.y > grid.length - 1 || object.x > grid[0].length -1) return false;
-    // });
-    // return true;
+function shipWithinGrid(shipPositionArray, grid) {
+  return shipPositionArray.every((position) => position.y < grid.height && position.x < grid.width);
 }
 
+// const noShipClashes = (shipPositionArray, grid) => {
+//   const noShipClashes = shipPositionArray.every( (position) => {
+//     let square = getSquare(grid, position.x, position.y);
+//     console.log (square)
+//   });
+
+//   return noShipClashes;
+// }
+
 const newShip = (startPoint, axis, length, grid) => {
-    //basic variables
-    let remainingGridSquares = length;
+  //basic variables
+  let remainingGridSquares = length;
 
-
-    //get ship positions on grid
-    const shipPositionArray =  getNewShipGridLocations(startPoint, axis, length);
+  //get ship positions on grid
+  const shipPositionArray = getNewShipGridLocations(startPoint, axis, length);
   //check if position fits on grid
-    if ( shipWithinGrid (shipPositionArray, grid) === false ) return false;
+  if (shipWithinGrid(shipPositionArray, grid) === false) return false;
 
   //check if position overlaps any other ships
 

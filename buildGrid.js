@@ -17,47 +17,44 @@ const newEmptyGrid = (height, width) => {
   //create the basic grid array
   let gridArray = [];
   for (let y = 0; y < height; y++) {
-      let rowArray = [...Array(width)].map((unused, x) => {
-        return { xAxis: x, yAxis: y, gridSquare: newGridSquare() };
-      });
-      gridArray = [...gridArray, ...rowArray]
+    let rowArray = [...Array(width)].map((unused, x) => {
+      return { x, y, gridSquare: newGridSquare() };
+    });
+    gridArray = [...gridArray, ...rowArray];
   }
 
-  return gridArray;
+  return { array: gridArray, height, width };
 };
 
-const getTargetGridSquare = (gridArray, xAxis, yAxis) => {
-    return gridArray.filter( object => object.y === gridLocation.yAxis && object.x === gridLocation.xAxis)[0];
-}
-
 const gameBoard = (height, width) => {
-    const gridArray = newEmptyGrid(height, width);
+  const grid = newEmptyGrid(height, width);
 
-    const getGridArray = () => gridArray;
+  const getGrid = () => grid;
 
-    const addShip = (startPoint, axis, length) => {
-        let newShipObject = newShip(startPoint, axis, length, gridArray);
-        //action for if the ship can't be built
-        if (newShipObject === false) {
-            console.log ('can not add this ship')
-            return;
-        }
-        //add the new ShipObject to the Grid
-        newShipObject.shipPositionArray.forEach( (gridLocation) => {
-            let targetGridSquare = getTargetGridSquare(gridArray, gridLocation.xAxis, gridLocation.yAxis);
-            console.log (targetGridSquare);
-            targetGridSquare.occupy(newShipObject);
-        } );
+  const getSquare = (x, y) => {
+    return grid.array.filter((object) => object.y === y && object.x === x)[0];
+  };
+
+  const addShip = (startPoint, axis, length) => {
+    let newShipObject = newShip(startPoint, axis, length, grid);
+    //action for if the ship can't be built
+    if (newShipObject === false) {
+      console.log("can not add this ship");
+      return;
     }
+    //add the new ShipObject to the Grid
+    newShipObject.shipPositionArray.forEach((position) => {
+      let target = getSquare(position.x, position.y);
+      target.gridSquare.occupy(newShipObject);
+    });
+  };
 
-    const receiveAttack = (coordinates) => {
-        //update the gridArray
+  const receiveAttack = (coordinates) => {
+    //update the gridArray
+    //update the Ship
+  };
 
-        //update the Ship
-    }
+  return { getGrid, getSquare, addShip, receiveAttack };
+};
 
-    return {getGridArray, addShip, receiveAttack}
-
-}
-
-module.exports = gameBoard
+module.exports = gameBoard;
