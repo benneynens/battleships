@@ -1,0 +1,35 @@
+TESTS
+ - is placement of ship on grid allowed
+    - doesn't overlap another ship
+    - doesn't extend outside the grid
+ - is ship sunk
+   --needs: hypothetical bomb locations + hypothetical ship location + hypothetical grid size
+
+
+OBJECTS]
+ - create the grid
+    - height and width as inputs
+    - array of grid squares, with properties
+     - ship object, if occupied
+     - bombed status
+    *grid methods:
+      - place ship
+
+
+ - array of ships not necessary?
+
+
+MAIN FUNCTIONS
+- create grid
+ - create and display ships
+
+MINOR FUNCTIONS
+ - square occupied by ship (returns boolean)
+  - square bombed (returns boolean)
+ - get possible grid positions for a new ship (input= starting position)
+ - check if shop position possible
+    - 
+
+ TESTS
+  - DONE: does a grid square contain a ship?  (need some preexisting mock ships)
+  - does a ship position extend over the side of the grid?
