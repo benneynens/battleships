@@ -1,4 +1,5 @@
 const newShip = require("./newShip");
+const getSquare = require("./getSquare");
 
 const newGridSquare = () => {
   let bombed = false;
@@ -31,10 +32,6 @@ const gameBoard = (height, width) => {
 
   const getGrid = () => grid;
 
-  const getSquare = (x, y) => {
-    return grid.array.filter((object) => object.y === y && object.x === x)[0];
-  };
-
   const addShip = (startPoint, axis, length) => {
     let newShipObject = newShip(startPoint, axis, length, grid);
     //action for if the ship can't be built
@@ -44,7 +41,7 @@ const gameBoard = (height, width) => {
     }
     //add the new ShipObject to the Grid
     newShipObject.shipPositionArray.forEach((position) => {
-      let target = getSquare(position.x, position.y);
+      let target = getSquare(grid, position.x, position.y);
       target.gridSquare.occupy(newShipObject);
     });
   };
