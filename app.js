@@ -1,9 +1,11 @@
+const { randomNumber } = require("./utilities");
+
 const buildGrid = (height, width) => {
   //create the basic grid array
   let gridArray = [];
   for (let y = 0; y < height; y++) {
     let rowArray = [...Array(width)].map((unused, x) => {
-      return { x, y, shipObject: null };
+      return { x, y, shipObject: null, bombed: false };
     });
     gridArray = [...gridArray, ...rowArray];
   }
@@ -30,13 +32,33 @@ const grid = (height, width) => {
     addShipToGrid(newShipWaypoints, newShipObject, grid);
   };
 
-  const bomb = (x, y) => {};
+  const bomb = (x, y) => {
+    let targetGridSquare = getSquare(grid, x, y);
+    targetGridSquare.bombed = true;
+    //hit ship
+    if (targetGridSquare.shipObject !== null) {
+      targetGridSquare.shipObject.hit();
+    }
+  };
 
-  const checkRemainingShips = () => {};
+  const checkSquareBombed = (x, y) => {
+    let targetGridSquare = getSquare(grid, x, y);
+    return targetGridSquare.bombed;
+  };
 
-  const returnGrid = () => grid;
+  const checkRemainingShips = () => ships.filter((ship) => ship.isSunk() === false).length;
 
-  return { checkShipFits, addShip, returnGrid /*temp*/, checkShipNoCrash };
+  const gridSize = { width: grid.width, height: grid.height };
+
+  return {
+    checkShipFits,
+    addShip,
+    checkShipNoCrash,
+    bomb,
+    checkRemainingShips,
+    gridSize,
+    checkSquareBombed,
+  };
 };
 
 const getSquare = (grid, x, y) => {
@@ -74,4 +96,26 @@ const proposedShip = (startPoint, orientation, length) => {
   return shipLocations;
 };
 
-module.exports = { proposedShip, grid };
+const player = (name, opponentGrid) => {
+  const getName = () => name;
+
+  const launchAttack = (coordinates) => {
+    if (coordinates === undefined) {
+      let alreadyBombed;
+      while (coordinates === undefined || alreadyBombed === true) {
+        //generate random coordinates
+        coordinates = {
+          x: randomNumber(0, opponentGrid.gridSize.width - 1),
+          y: randomNumber(0, opponentGrid.gridSize.height - 1),
+        };
+        //check if the random waypoint has been attacked already
+        alreadyBombed = opponentGrid.checkSquareBombed(coordinates.x, coordinates.y);
+      }
+    }
+    //place the attack on the opponents grid
+    opponentGrid.bomb(coordinates.x, coordinates.y);
+  };
+  return { launchAttack };
+};
+
+module.exports = { proposedShip, grid, player };
